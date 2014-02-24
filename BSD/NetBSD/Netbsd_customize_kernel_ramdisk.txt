@@ -1,0 +1,28 @@
+
+
+Modify the Netbsd kernel ramdisk
+--------------------------------
+
+Get a netbsd kernel that already has a ramdisk, unarchive the kernel,
+extract its ramdisk. attach a memory device to the ramdisk, mount and
+change or otherwise populate the memory device, unmount it and test
+the modified kernel with a virtual machine
+
+
+  ftp http://ftp.netbsd.org/pub/NetBSD/NetBSD-6.0/i386/binary/kernel/netbsd-INSTALL.gz 
+  gunzip netbsd-INSTALL.gz 
+  mdsetimage -x netbsd-INSTALL ramdisk.fs 
+  vnconfig vnd0 ramdisk.fs 
+  mount -t ufs /dev/vnd0a /mnt 
+  rm -r /mnt/sysi* 
+  umount /mnt 
+  vnconfig -u vnd0 
+  mdsetimage netbsd-INSTALL ramdisk.fs 
+  qemu -kernel netbsd-INSTALL
+
+Because the netbsd "INSTALL" kernel already has a ramdisk contatining a 
+root filesystem, it is simple to extract and modify its root filesystem
+and test this function.
+
+
+# (C) 2014 cgraf 

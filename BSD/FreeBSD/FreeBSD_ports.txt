@@ -1,0 +1,26 @@
+
+FreeBSD ports
+-------------
+
+Compile and install a simple program using the FreeBSD ports.
+
+Get and unarchive the tarball "ports.txz", change directory
+to the program you wish to compile, and invoke `make' to compile 
+the program, then `make install' to install it.
+
+As an example, compile the shell "dash" on FreeBSD 9.2:
+
+  ftp ftp://ftp.freebsd.org/pub/FreeBSD/snapshots/i386/i386/9.1-STABLE/ports.txz 
+  tar -xf ports.txz -C / 
+  cd /usr/ports/shells/dash/ 
+  make 
+  make install
+
+If there were no compile errors your program should now be
+installed.
+
+
+
+(C) 2014, Documentation,  cgraf
+
+

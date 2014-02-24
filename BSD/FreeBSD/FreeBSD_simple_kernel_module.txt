@@ -1,0 +1,62 @@
+
+FreeBSD simple kernel module
+----------------------------
+
+Create a simple "hello world" kernel module in FreeBSD 9.1.
+
+The "src.txz" MUST correspond to the release you are using.
+
+Get and unarchive the tarball "src.txz", create a Makefile
+and a file named "hello.c", invoke `make' to compile the
+module and `kldstat ./hello.ko' to load it.
+
+  ftp ftp://ftp.freebsd.org/pub/FreeBSD/releases/i386/9.1-RELEASE/src.txz 
+  tar -xf src.txz  -C / 
+
+  cat > Makefile << EOF
+  KMOD =   hello
+  SRCS =   hello.c
+  .include <bsd.kmod.mk>
+  EOF
+
+  cat > hello.c << EOF
+  #include <sys/param.h>
+  #include <sys/module.h>
+  #include <sys/kernel.h>
+  #include <sys/systm.h> 
+  static int event_handler(struct module *module, int event, void *arg) {
+      int e = 0; 
+      switch (event) {
+      case MOD_LOAD:
+          printf("Hello World.\n");  
+          uprintf("Hello World.\n"); 
+          break;
+      case MOD_UNLOAD:
+          printf("Goodbye World.\n");   /* log    */
+          uprintf("Goodbye World.\n");  /* stdout */
+          break;
+      default:
+          e = EOPNOTSUPP; /* Error */
+          break;
+      }
+      return(e);
+  }
+  static moduledata_t hello_conf = {
+      "hello",  
+       event_handler, 
+       NULL           
+  }; 
+  DECLARE_MODULE(hello, hello_conf, SI_SUB_DRIVERS, SI_ORDER_MIDDLE);
+  EOF
+
+  make
+
+If there were no compile errors you can now load and unload
+the kernel module: 
+
+  kldload ./hello.ko
+  kldunload ./hello.ko
+
+
+
+2014 (C) Documentation, cgraf

@@ -1,0 +1,20 @@
+
+Netbsd compile from ports
+-------------------------
+
+Get and unarchive the "pkgsrc.tar.gz" tarball, change into
+the directory of the program you wish to compile and invoke
+`make' then `make install'.
+
+Example demonstrates compiling the shell "dash" on NetBSD 6.0
+
+  ftp http://ftp.netbsd.org/pub/pkgsrc/stable/pkgsrc.tar.gz
+  tar xzfp pkgsrc.tar.gz -C /
+  cd /pkgsrc/shells/dash/
+  make
+  make install
+  
+If there were no compile errors your program should now be
+installed.
+
+# (C) 2014 Documentation, cgraf

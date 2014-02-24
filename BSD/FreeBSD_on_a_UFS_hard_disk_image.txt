@@ -1,0 +1,34 @@
+
+
+FreeBSD auto install
+--------------------
+
+Create a simple Freebsd installation on a binary hard disk image
+formatted to UFS.
+
+Make a disk image of arbitrary size, attach a memory device to
+the disk, install the bootloader code. format to UFS, populate the 
+memory device with "base.txz" and "kernel.txz", add any needed 
+configuration files, set the password, then unmount and disattach 
+the memory disk.
+
+
+  dd if=/dev/zero of=binary.img bs=1M count=600
+  mdconfig -a -t vnode -f binary.img -u 0 
+  bsdlabel -w -B md0 auto 
+  newfs -m 0 md0a 
+  mount /dev/md0a /mnt 
+  ftp ftp://ftp.freebsd.org/pub/FreeBSD/snapshots/i386/i386/9.2-STABLE/kernel.txz 
+  ftp ftp://ftp.freebsd.org/pub/FreeBSD/snapshots/i386/i386/9.2-STABLE/base.txz 
+  tar -xf kernel.txz -C /mnt
+  tar -xf base.txz -C /mnt 
+  echo "/dev/ada0a  /  ufs  rw  0  0" >> /mnt/etc/fstab 
+  echo live | chroot /mnt pw mod user root -h 0
+  umount /mnt 
+  mdconfig -d -u 0 
+
+If everything went as expected, you should be left with a bootable
+hard disk image named "binary.img", which can be booted with a virtual
+machine or written to a USB or hard drive with `dd'.
+
+2014 (C) cgraf 

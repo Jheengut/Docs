@@ -1,0 +1,21 @@
+
+
+NetBSD compile kernel
+---------------------
+
+Not yet tested, do not use please.
+
+
+  ftp ftp://ftp.NetBSD.org/pub/NetBSD/NetBSD-6.0/source/sets/syssrc.tgz
+  ftp ftp://ftp.NetBSD.org/pub/NetBSD/NetBSD-6.0/source/sets/src.tgz
+  ftp ftp://ftp.NetBSD.org/pub/NetBSD/NetBSD-6.0/source/sets/sharesrc.tgz
+  tar -xzf syssrc.tgz -C /usr/src
+  tar -xzf src.tgz -C /usr/src
+  tar -xzf sharesrc.tgz -C /usr/src
+  cp /usr/src/sys/arch/i386/conf/GENERIC /usr/src/sys/arch/i386/conf/MY_KERNEL
+  cd /usr/src
+  ./build.sh  -O ../obj -T ../tools -u kernel=MY_KERNEL
+  
+
+# (C) 2014 Documentation, cgraf
+

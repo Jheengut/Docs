@@ -1,0 +1,33 @@
+
+
+NetBSD automatic install to UFS disk image
+------------------------------------------
+
+
+Create the hard disk image with dd, attach a memory device,
+format and mount the memory device, populate the device,  
+adjust the rc.conf and fstab configuration files, install
+the bootloader code and modify the disk label.
+
+  dd if=/dev/zero of=binary.img bs=1m count=150 
+  vnconfig vnd0 binary.img 
+  newfs vnd0a 
+  mount /dev/vnd0a /mnt 
+  cp /usr/mdec/boot  /mnt 
+  ftp http://ftp.netbsd.org/pub/NetBSD/NetBSD-6.0/i386/binary/sets/base.tgz 
+  ftp http://ftp.netbsd.org/pub/NetBSD/NetBSD-6.0/i386/binary/sets/etc.tgz 
+  ftp http://ftp.netbsd.org/pub/NetBSD/NetBSD-6.0/i386/binary/sets/kern-GENERIC.tgz
+  tar xzfp kern-GENERIC.tgz -C /mnt
+  tar xzfp base.tgz -C /mnt
+  tar xzfp etc.tgz -C /mnt 
+  echo "rc_configured=YES" >>/mnt/etc/rc.conf
+  echo "/dev/wd0a / ffs rw 0 0" >>/mnt/etc/fstab 
+  umount /mnt 
+  (echo W; echo Y; echo Q; ) | disklabel -i vnd0 
+  installboot -vf binary.img /usr/mdec/bootxx_ffsv1 
+  vnconfig -u vnd0
+
+You will be left with a bootable hard disk image called "binary.img".  
+
+# (C) 2014 Documentation, cgraf
+

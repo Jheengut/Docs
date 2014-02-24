@@ -1,0 +1,75 @@
+
+Linux system compiled from source code
+--------------------------------------
+
+Build a very simple linux system from source code.
+
+Create, format and mount a disk image then get, compile and install
+busybox onto it. Get the linux kernel, and a "defconfig" file 
+which contains all needed drivers, then compile and install it 
+to the disk image as well. Then get, compile and install the 
+syslinux bootloader to the disk image. Finally, create the needed 
+configuration files for the init system.
+
+
+  dd if=/dev/zero of=binary.img bs=1M count=150
+  /sbin/mkfs.ext4 -F binary.img
+  sudo mount binary.img /mnt
+  mkdir -p /mnt/dev /mnt/proc /mnt/boot /mnt/etc /mnt/root
+
+  git clone git://busybox.net/busybox.git 
+  make -C busybox defconfig
+  sed -i 's|# CONFIG_STATIC is not set|CONFIG_STATIC=y|g' busybox/.config
+  make -C busybox 
+  make -C busybox CONFIG_PREFIX=/mnt install 
+
+  git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 
+  wget https://github.com/Statix/Linux/raw/master/lib/linux-defconfigs/defconfig_x86_64_2 -O linux/def.config
+  make -C linux allnoconfig KCONFIG_ALLCONFIG=def.config 
+  make -C linux 
+  make -C linux INSTALL_MOD_PATH=/mnt modules_install
+  make -C linux install INSTALL_PATH=/mnt/boot 2>/dev/null
+  ln /mnt/boot/vmlinuz* /mnt/boot/vmlinuz 
+  git clone git://git.kernel.org/pub/scm/boot/syslinux/syslinux.git 
+  make -C syslinux 
+
+  sudo ./syslinux/extlinux/extlinux --install /mnt
+  cat > /mnt/extlinux.conf << EOF
+  default linux
+  label linux
+  kernel /boot/vmlinuz
+  append init=/sbin/init root=/dev/sda rw
+  EOF
+
+  cat > /mnt/etc/inittab << EOF
+  null::sysinit:/bin/mount -t proc proc /proc
+  null::sysinit:/bin/mount -o remount,rw /
+  null::sysinit:/bin/mkdir -p /dev/pts
+  null::sysinit:/bin/mkdir -p /dev/shm
+  null::sysinit:/bin/mount -a
+  null::sysinit:/bin/hostname -F /etc/hostname
+  tty1::respawn:/sbin/getty -L tty1 115200 vt100
+  null::shutdown:/bin/umount -a -r
+  null::shutdown:/bin/swapoff -a
+  EOF
+  cat > /mnt/etc/fstab << EOF
+  proc /proc proc defaults 0 0
+  EOF
+  cat > /mnt/etc/passwd << EOF
+  root::0:0:root:/root:/bin/ash
+  EOF
+  cat > /mnt/etc/group <<EOF
+  root:x:0: 
+  EOF
+
+  sudo umount /mnt
+
+If all went as expected, and there were no significant compile errors, you
+will be left with a bootable disk image called "binary.img". Which can be
+written to a USB, hard drive, or simply tested with a virtual machine:
+
+  kvm binary.img
+
+
+
+# 2014 (C) Documentation, cgraf

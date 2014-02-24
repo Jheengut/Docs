@@ -1,0 +1,25 @@
+
+FreeBSD kernel compile
+----------------------
+
+Compile and install the FreeBSD kernel.
+
+Get and unarchive the tarball "kernel.txz", back up the
+"GENERIC" configuration file, and compile the kernel.
+
+
+  ftp ftp://ftp.freebsd.org/pub/FreeBSD/snapshots/i386/i386/9.1-STABLE/src.txz
+  tar -xf src.txz -C /
+  cp /usr/src/sys/i386/conf/GENERIC /usr/src/sys/i386/conf/MY_KERNEL 
+  make -C /usr/src buildkernel KERNCONF=MY_KERNEL
+
+The kernel will be located in "/usr/obj/usr/src/sys/" and 
+can be installed by invoking `installkernel'.
+
+  make -C /usr/src installkernel KERNCONF=MY_KERNEL
+
+
+
+
+(C) 2014, Documentation,  cgraf
+

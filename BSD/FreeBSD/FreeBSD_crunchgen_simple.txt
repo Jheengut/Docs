@@ -1,0 +1,33 @@
+
+FreeBSD crunchgen simple example
+--------------------------------
+
+Crunchgen adds the name of the program to whatever directory you specify
+in the configuration file. We just need to make sure that the tarball 
+"src.txz" which corresponds to our release is unarchived and ready.
+For brevities sake I have chosen to only include `sh', `dmesg' and `cp'.
+Which only requires the paths "/usr/src/sbin", "/usr/src/bin" and "/lib".
+
+  ftp ftp://ftp.freebsd.org/pub/FreeBSD/snapshots/i386/i386/9.2-STABLE/src.txz
+  tar -xf src.txz -C /
+
+  cat > crunched.conf << EOF
+  srcdirs /usr/src/sbin  /usr/src/bin /lib
+  progs sh dmesg cp
+  libs -lutil -lcrypt -ll -ledit -ltermcap
+  libs -lipsec -lm
+  libs -lkvm
+  EOF
+
+  crunchgen crunched.conf
+  make -f crunched.mk
+
+If all went as planned and there were no significant complil errors
+you will be left with a statically linked binary called "crunched".
+You can run it and test it:
+
+  ./crunched
+
+
+(C) 2014 Documentation, cgraf
+

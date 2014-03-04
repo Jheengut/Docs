@@ -1,0 +1,43 @@
+
+FreeBSD on a ZFS disk image
+---------------------------
+
+This is a working work in progress... use at your own risk.
+
+This system is for making a tiny i386 based ZFS install.
+ZFS should be used with amd64. At the boot screen, you 
+will have to boot to single user mode, or it will not work.
+Then run "mount -o rw /dev/ada0 /" at run time to make it 
+writeable.
+
+Create a disk image and attach a memory device to it. Partition
+and format the disk image to ZFS. Mount the disk image with zpool
+and and use "zfs create" to make the filesystems. Then echo in a
+ton of i386 specific parameters. Unattach all devices and test 
+boot the resulting "binary.img".
+
+  dd if=/dev/zero of=binary.img bs=1M count=800
+  mdconfig -a -t vnode -f binary.img -u 0
+  gpart create -s gpt md0 
+  gpart add -s 64k -t freebsd-boot md0
+  gpart add -t freebsd-zfs  md0
+  gpart bootcode -b /boot/pmbr -p /boot/gptzfsboot -i 1 md0
+  zpool create -o altroot=/mnt -O mountpoint=/ zroot /dev/md0p2
+  zfs create -o mountpoint=/ zroot/9.2
+  zpool set bootfs=zroot/9.2 zroot
+  tar -zxpf  base.txz -C /mnt && tar -zxpf  kernel.txz -C /mnt
+  echo 'zfs_enable="YES"' >>/mnt/etc/rc.conf
+  echo 'geom_mirror_load="YES"' >>/mnt/boot/loader.conf
+  echo 'zfs_load="YES"' >>/mnt/boot/loader.conf
+  echo 'vfs.root.mountfrom="zfs:zroot/9.2"' >> /mnt/boot/loader.conf
+  echo 'vfs.root.mountfrom.options=rw'>>/mnt/boot/loader.conf
+  echo 'vm.kmem_size_max="700M"'>>/mnt/boot/loader.conf
+  echo 'vm.kmem_size="700M"'>>/mnt/boot/loader.conf
+  echo 'vfs.zfs.prefetch_disable=0'>>/mnt/boot/loader.conf
+  zpool detach zroot /dev/md0p2
+  zfs umount -a
+  zpool clear zroot
+  mdconfig -d -u 0
+
+
+(C) 2014 Documentation, cgraf 

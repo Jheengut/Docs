@@ -22,7 +22,7 @@ Which only requires the paths "/usr/src/sbin", "/usr/src/bin" and "/lib".
   crunchgen crunched.conf
   make -f crunched.mk
 
-If all went as planned and there were no significant complil errors
+If all went as planned and there were no significant compile errors
 you will be left with a statically linked binary called "crunched".
 You can run it and test it:
 

@@ -1,0 +1,16 @@
+
+`screen' multiuser sessions
+---------------------------
+
+Put the entries "multiuser on" and "acladd root" into the file 
+"~/.screenrc", start a screen session ( "screen -s my_screen_session" )
+and then attach it from the other user, in ths case we are using "john"
+and "root" as our users.
+
+   john@host: $  echo "multiuser on" >> ~/.screenrc
+   john@host: $  echo "acladd root"  >> ~/.screenrc
+   john@host: $  screen -s my_screen_session
+
+   root@host: #  screen -x john/my_screen_session
+
+(C) 2014 Documentation, cgraf

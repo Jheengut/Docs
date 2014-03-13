@@ -1,0 +1,35 @@
+# work in progress, do not usee please!!
+
+
+cat > crunched.conf < EOF
+srcdirs /usr/src/sbin  /usr/src/bin /lib /usr/src/libexec/
+
+# from /usr/src/bin
+progs cat chflags chio chmod cp csh date dd df domainname echo expr getfacl
+progs hostname kenv kill link ln ls mkdir mv pax  pgrep pkill ps pwait pwd rcp
+progs realpath  red  rm rmdir setfacl  sh sleep stty sync tcsh test
+progs unlink uuidgen
+
+# from /usr/src/sbin
+progs adjkerntz atacontrol atmconfig  clri comcontrol  ddb  devfs dhclient
+progs dhclient-script disklabel disklabel dmesg dump dumpon fastboot fasthalt
+progs fsck fsck_4.2bsd fsck_msdosfs fsck_ufs fsdb fsirand gcache gconcat geli
+progs geom ggatec ggated ggatel gjournal glabel gmirror gmountver gmultipath
+progs gnop gpart graid graid3 growfs gshsed gshsec gstripe gvirstor halt
+progs init ipf ipfs ipfstat  ipftest ipfw ipmon ipnat ippool ipresend kldconfig
+progs kldstat  kldunload ldconfig  mdmfs mknod  mksnap_ffs mount   mount_mfs
+progs mount_nfs mount_nullfs mount_oldnfs  mount_unionfs newfs_msdos nextboot
+progs nfsiod nologin nos-tun ping poweroff quotacheck  rcorder rdump reboot
+progs recoverdisk resolvconf restore  rtquery rtsol sconfig setkey sha1 sha256
+progs shutdown spppcontrol swapctl swapoff swapon sysctl umount zfs zpool
+
+# from /usr/src/libexec
+progs getty
+
+
+libs -lutil -lcrypt -ll -ledit -ltermcap
+libs -lipsec -lm
+libs -lkvm
+EOF
+crunchgen crunched.conf
+make -f crunched.mk

@@ -10,7 +10,7 @@ the program, then `make install' to install it.
 
 As an example, compile the shell "dash" on FreeBSD 9.2:
 
-  ftp ftp://ftp.freebsd.org/pub/FreeBSD/snapshots/i386/i386/9.1-STABLE/ports.txz 
+  ftp ftp://ftp.freebsd.org/pub/FreeBSD/releases/i386/i386/9.1-RELEASE/ports.txz
   tar -xf ports.txz -C / 
   cd /usr/ports/shells/dash/ 
   make 

@@ -1,0 +1,18 @@
+
+Irssi autoconnect to #freebsd
+-----------------------------
+
+   /connect irc.freenode.net
+   /nick YOURNICK
+   /set nick YOURNICK
+   /SERVER ADD -auto -network freenode irc.freenode.net 6667 YOURPASSWORD 
+   /NETWORK ADD -auto #freebsd freenode
+   /CHANNEL ADD -auto #freebsd freenode
+
+This will not take effect until you quit and rejoin.
+
+
+
+
+
+

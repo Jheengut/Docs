@@ -5,6 +5,8 @@ FreeBSD crunchgen UFS diskimage
 
 
 
+
+
 Create a simple Freebsd installation on a binary hard disk image
 formatted to UFS.
 
@@ -30,7 +32,7 @@ the memory disk.
   umount /mnt 
   mdconfig -d -u 0 
 
-ftp ftp://ftp.freebsd.org/pub/FreeBSD/snapshots/i386/i386/9.2-STABLE/src.txz
+  ftp ftp://ftp.freebsd.org/pub/FreeBSD/snapshots/i386/i386/9.2-STABLE/src.txz
   tar -xf src.txz -C /
 
   cat > crunched.conf << EOF
